@@ -20,10 +20,32 @@ char look_up(int pnum)
 		case 57:  result = '9'; break;
 		case 58:  result = ':'; break;
 		case 63:  result = '?'; break;
+		case 65:  result = 'A'; break;
 		case 66:  result = 'B'; break;
 		case 67:  result = 'C'; break;
+		case 68:  result = 'D'; break;
+		case 69:  result = 'E'; break;
+		case 70:  result = 'F'; break;
+		case 71:  result = 'G'; break;
+		case 72:  result = 'H'; break;
+		case 73:  result = 'I'; break;
+		case 74:  result = 'J'; break;
+		case 75:  result = 'K'; break;
+		case 76:  result = 'L'; break;
+		case 77:  result = 'M'; break;
+		case 78:  result = 'N'; break;
+		case 79:  result = 'O'; break;
+		case 80:  result = 'P'; break;
+		case 81:  result = 'Q'; break;
+		case 82:  result = 'R'; break;
 		case 83:  result = 'S'; break;
 		case 84:  result = 'T'; break;
+		case 85:  result = 'U'; break;
+		case 86:  result = 'V'; break;
+		case 87:  result = 'W'; break;
+		case 88:  result = 'X'; break;
+		case 89:  result = 'Y'; break;
+		case 90:  result = 'Z'; break;
 		case 97:  result = 'a'; break;
 		case 98:  result = 'b'; break;
 		case 99:  result = 'c'; break;
@@ -49,8 +71,8 @@ char look_up(int pnum)
 		case 119: result = 'w'; break;
 		case 120: result = 'x'; break;
 		case 121: result = 'y'; break;
-		case 163: result = '£'; break;
-		default: result='$';
+		case 163: result = 163; break;
+		default: result=' ';
 	}
 	return result;
 }

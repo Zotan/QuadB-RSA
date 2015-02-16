@@ -27,46 +27,49 @@
    117961196597149059480253145659311142150566350280892573178881)
 
 */
-#define DECRYPTOR 11283244891901214385067692193422554779725885454515489121467  //-77905
-#define MODULUS   117961196597149059480253145659311142150566350280892573178881 //930353
 
-char * do_decrypt(mpz_t base);
+// Function prototypes
+char * do_decrypt (mpz_t base, const char *decrypt, const char *modulus);
 
-// Ay9ALVwu
 //Globals
 char pword[61];
+const char msg1_modulus[] = "-77905";
+const char msg1_decrypt[] = "930353";
+
+const char msg2_modulus[] = "117961196597149059480253145659311142150566350280892573178881";
+const char msg2_decrypt[] = "11283244891901214385067692193422554779725885454515489121467";
 
 int main(int argc, char *argv[])
 {
-	int strpos;
-	/* int j = 0; */
-	//int k = 0;
-	int    carryon = 1;
-	FILE  *msg_fp;
-	mpz_t  base;
-	char  *result;
-	/* char   cword[59]; */
-	char  *currentWord;
-	/* char   pchar = '$'; */
-	/* int    temp_res = 0; */
-	char   temp_str[4];
+	int     i;
+	int     strpos;
+	int     carryon = 1;
+	FILE   *msg1_fp, *msg2_fp;
+	mpz_t   base;
+	char   *result;
+	char   *currentWord;
+	char    temp_str[4];
 	ssize_t charsRead;
 	size_t  bytesRead = 116;
-	int resultLength;
-	char clearChar;
-	int clearValue;
+	int     resultLength;
+	char    clearChar;
+	int     clearValue;
+	int     loops;
+	char testWord[52];
 
-	if (argc != 2)
+	msg1_fp = fopen("msg1.txt", "r");
+
+	if (msg1_fp == NULL)
 	{
-		printf("Error: Text file name must be supplied as an arguement\n\t eg. ./bob msg2.txt\n");
+		printf("Failed to open message file msg1.txt");
 		exit(1);
 	}
 
-	msg_fp = fopen(argv[1], "r");
+	msg2_fp = fopen("msg2.txt", "r");
 
-	if (msg_fp == NULL)
+	if (msg2_fp == NULL)
 	{
-		printf("Failed to open message file %s", argv[1]);
+		printf("Failed to open message file msg2.txt");
 		exit(1);
 	}
 
@@ -78,24 +81,24 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	printf("\"");
+	printf(" -- Decrypting the first message -- \n");
 
-	while (carryon)
+	bytesRead = 104;
+	charsRead = getline(&currentWord, &bytesRead, msg1_fp);
+	loops = (int) strlen(currentWord);
+	printf("Bytes Read: %u, String Length: %d\n", (unsigned)bytesRead, loops);
+
+
+	for (i=1; i<loops; i++)
 	{
-		charsRead = getline(&currentWord, &bytesRead, msg_fp);
-		//printf("Bytes Read: %u", (unsigned)bytesRead);
-		if (charsRead == -1)
-		{
-			break;
-		}
-
-		mpz_init_set_str(base, currentWord, 10);
-
-		result = do_decrypt(base);
-		resultLength = (int) strlen(result);
+		strncpy(testWord, currentWord, i);
+		testWord[i] = '\0';
+		mpz_init_set_str(base, testWord, 10);
+		result = do_decrypt(base, msg1_decrypt, msg1_modulus);
+		printf(" Output: %5s, MSG: ", result);
 
 		strpos = 0;
-		while (strpos < resultLength)
+		while (strpos < strlen(result))
 		{
 			// three digit codes start with 1, Two digit codes start with 3-9, 0 is used as padding
 			if (result[strpos] == '0')
@@ -126,50 +129,114 @@ int main(int argc, char *argv[])
 			else
 			{ // Parse or Data error
 				strpos++; //Skip it
+				printf("Error");
 			}
 		}
-		/* if (result) */
-		/* { */
-		/* 	if(*result != '1') */
-		/* 	{ */
-		/* 		temp_str[0] = *result++; */
-		/* 		temp_str[1] = *result++; */
-		/* 		temp_str[2] = '\0'; */
-		/* 		temp_res = atoi(temp_str); */
-		/* 		pchar = look_up(temp_res); */
-		/* 		printf("%c", pchar); */
-		/* 	} */
-		/* 	do */
-		/* 	{ */
-		/* 		temp_str[0] = *result++; */
-		/* 		temp_str[1] = *result++; */
-		/* 		temp_str[2] = *result++; */
-		/* 		temp_str[3] = '\0'; */
-		/* 		temp_res = atoi(temp_str); */
-		/* 		pchar = look_up(temp_res); */
-		/* 		printf("%c", pchar); */
-		/* 	} */
-		/* 	while(*result != '\0'); */
-		/* 	//printf("\n"); */
-		/* } */
+		printf("\n");
 	}
+
+	printf(" --   End of the first message   -- \n");
+
+
+	printf(" -- Decrypting the second message -- \n");
+
 	printf("\"");
+
+	/* while (carryon) */
+	/* { */
+	/* 	charsRead = getline(&currentWord, &bytesRead, msg2_fp); */
+	/* 	//printf("Bytes Read: %u", (unsigned)bytesRead); */
+	/* 	if (charsRead == -1) */
+	/* 	{ */
+	/* 		break; */
+	/* 	} */
+
+	/* mpz_init_set_str(base, currentWord, 10); */
+
+	/* 	result = do_decrypt(base, msg2_decrypt, msg2_modulus); */
+	/* 	resultLength = (int) strlen(result); */
+
+	/* 	strpos = 0; */
+	/* 	while (strpos < resultLength) */
+	/* 	{ */
+	/* 		// three digit codes start with 1, Two digit codes start with 3-9, 0 is used as padding */
+	/* 		if (result[strpos] == '0') */
+	/* 		{ */
+	/* 			strpos++; //Skip it */
+	/* 		} */
+	/* 		else if (result[strpos] == '1') */
+	/* 		{ */
+	/* 			temp_str[0] = result[strpos++]; */
+	/* 			temp_str[1] = result[strpos++]; */
+	/* 			temp_str[2] = result[strpos++]; */
+	/* 			temp_str[3] = '\0'; */
+	/* 			//printf("%s, ", temp_str); */
+	/* 			clearValue = atoi(temp_str); */
+	/* 			clearChar  = look_up(clearValue); */
+	/* 			printf("%c", clearChar); */
+	/* 		} */
+	/* 		else if (result[strpos] != '2') */
+	/* 		{ */
+	/* 			temp_str[0] = result[strpos++]; */
+	/* 			temp_str[1] = result[strpos++]; */
+	/* 			temp_str[2] = '\0'; */
+	/* 			//printf("%s, ", temp_str); */
+	/* 			clearValue = atoi(temp_str); */
+	/* 			clearChar  = look_up(clearValue); */
+	/* 			printf("%c", clearChar); */
+	/* 		} */
+	/* 		else */
+	/* 		{ // Parse or Data error */
+	/* 			strpos++; //Skip it */
+	/* 			printf("Parse or Data error\n"); */
+	/* 		} */
+	/* 	} */
+	/* 	free(result); */
+	/* 	/\* if (result) *\/ */
+	/* 	/\* { *\/ */
+	/* 	/\* 	if(*result != '1') *\/ */
+	/* 	/\* 	{ *\/ */
+	/* 	/\* 		temp_str[0] = *result++; *\/ */
+	/* 	/\* 		temp_str[1] = *result++; *\/ */
+	/* 	/\* 		temp_str[2] = '\0'; *\/ */
+	/* 	/\* 		temp_res = atoi(temp_str); *\/ */
+	/* 	/\* 		pchar = look_up(temp_res); *\/ */
+	/* 	/\* 		printf("%c", pchar); *\/ */
+	/* 	/\* 	} *\/ */
+	/* 	/\* 	do *\/ */
+	/* 	/\* 	{ *\/ */
+	/* 	/\* 		temp_str[0] = *result++; *\/ */
+	/* 	/\* 		temp_str[1] = *result++; *\/ */
+	/* 	/\* 		temp_str[2] = *result++; *\/ */
+	/* 	/\* 		temp_str[3] = '\0'; *\/ */
+	/* 	/\* 		temp_res = atoi(temp_str); *\/ */
+	/* 	/\* 		pchar = look_up(temp_res); *\/ */
+	/* 	/\* 		printf("%c", pchar); *\/ */
+	/* 	/\* 	} *\/ */
+	/* 	/\* 	while(*result != '\0'); *\/ */
+	/* 	/\* 	//printf("\n"); *\/ */
+	/* 	/\* } *\/ */
+	/* } */
+	printf("\"");
+	printf(" --   End of the second message   -- \n");
 
 	//printf("\n");
 	mpz_clear(base);
-	fclose(msg_fp);
+	fclose(msg1_fp);
+	fclose(msg2_fp);
 	return 0;
 }
 
-char * do_decrypt(mpz_t base)
+
+char * do_decrypt (mpz_t base, const char *decrypt, const char *modulus)
 {
 	mpz_t mod, gmp_result, decryptor, limit;
 	char * result;
 	//size_t outputLength;
 
 	mpz_init(gmp_result);
-	mpz_init_set_str(decryptor, "11283244891901214385067692193422554779725885454515489121467" /*"930353"*/, 10);
-	mpz_init_set_str(mod,       "117961196597149059480253145659311142150566350280892573178881" /*"-77905"*/, 10);
+	mpz_init_set_str(decryptor, decrypt, 10);
+	mpz_init_set_str(mod,       modulus, 10);
 	mpz_init_set_str(limit,     "999999999999999999999999999", 10);
 
 	mpz_powm(gmp_result, base, decryptor, mod);
