@@ -1,2 +1,2 @@
 qbrsa: qbrsa.c qbrsa.h
-	gcc -Wall -Wextra -g -o qbrsa qbrsa.c -lgmp
+	gcc -Wall -Wextra -pedantic -g -std=c99 -o qbrsa qbrsa.c -lgmp
