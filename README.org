@@ -1,0 +1,14 @@
+* Quad B RSA
+  This program solves Bob Pages 1994 RSA cryptography challenge. Both the source
+  code and the pictures of the original question sheet contain the answers. So
+  if you want to do it yourself see below. GPL3+ licensed.
+** Message One
+   look at msg1.txt for the cipher text and the header file for character
+   conversion. Each comma separated value is a single character.
+   n = 930353
+   e = 143
+** Message Two
+   Look at msg2.txt same character conversion as before. Characters are now in
+   blocks rather than individually. One line is a block
+   n = 117961196597149059480253145659311142150566350280892573178881
+   e = 115
